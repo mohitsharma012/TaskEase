@@ -20,6 +20,7 @@ export async function GET(request: Request) {
         { status: 401 }
       );
     }
+    console.log('decoded', decoded);
 
     const client = await clientPromise;
     const db = client.db('TaskEase');
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+    console.log('token', token);
 
     const decoded = await verifyToken(token);
     if (!decoded) {

@@ -1,33 +1,33 @@
-// import * as jwt from 'jsonwebtoken';
 
+interface UserData {
+  userId: string;
+  email: string;
+}
 
+export const verifyToken = async (token?: string): Promise<UserData | null> => {
+  const tokenToUse = token || localStorage.getItem("token");
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
+  if (!tokenToUse) return null;
 
+  try {
+    const response = await fetch("/api/auth/verify-token", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tokenToUse}`,
+      },
+    });
 
-import { verify } from 'jsonwebtoken';
+    if (!response.ok) throw new Error("Invalid token");
 
-export const verifyToken = async (token: string) => {
-    // const token = localStorage.getItem("token");
-    if (!token) return null;
-
-    try {
-      const response = await fetch("/api/auth/verify-token", {
-        method: "GET",
-        headers: {
-          token: token,
-        },
-      });
-
-      if (!response.ok) throw new Error("Invalid token");
-
-      const data = await response.json();
-      return { userId: data.userId, email: data.email };
+    const data = await response.json();
+    return { userId: data.userId, email: data.email };
   } catch (error) {
     console.error("Verify token error:", error);
     return null;
   }
 };
+
+
 
 
 
