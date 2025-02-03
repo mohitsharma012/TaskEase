@@ -65,7 +65,6 @@ export async function POST(request: Request) {
         );
       }
 
-      console.log(JWT_SECRET)
 
       const token = jwt.sign(
         { userId: user._id.toString(), email: user.email },

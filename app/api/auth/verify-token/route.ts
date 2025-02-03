@@ -13,7 +13,13 @@ export async function GET(request: Request) {
       );
     }
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; email: string };
+        const decoded = jwt.verify(token, JWT_SECRET);
+        if (typeof decoded === 'string') {
+            return NextResponse.json(
+                { error: "Invalid token format" },
+                { status: 401 }
+            );
+        }
         return NextResponse.json({ userId: decoded.userId, email: decoded.email });
     } catch (error) {
         return NextResponse.json(

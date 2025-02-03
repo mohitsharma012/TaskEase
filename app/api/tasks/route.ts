@@ -16,11 +16,10 @@ export async function GET(request: Request) {
     const decoded = await verifyToken(token);
     if (!decoded) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Unauthorizedfasdf' },
         { status: 401 }
       );
     }
-    console.log('decoded', decoded);
 
     const client = await clientPromise;
     const db = client.db('TaskEase');
@@ -48,7 +47,6 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-    console.log('token', token);
 
     const decoded = await verifyToken(token);
     if (!decoded) {

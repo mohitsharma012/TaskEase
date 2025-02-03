@@ -6,6 +6,7 @@ export interface User {
 
 export interface Task {
   _id: string;
+  id: string;
   title: string;
   description: string;
   status: 'todo' | 'in-progress' | 'completed';

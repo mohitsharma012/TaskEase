@@ -10,7 +10,7 @@ export const verifyToken = async (token?: string): Promise<UserData | null> => {
   if (!tokenToUse) return null;
 
   try {
-    const response = await fetch("/api/auth/verify-token", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/verify-token`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${tokenToUse}`,
@@ -91,7 +91,6 @@ export const getCurrentUser = async () => {
   try {
     const decoded = await verifyToken(token);
     if (!decoded) return null;
-    console.log(decoded);
     return {
       userId: decoded.userId,
       email: decoded.email,

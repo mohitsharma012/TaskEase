@@ -2,19 +2,39 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, LogOut, Search, Trash2, Edit2, Calendar, Clock, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  LogOut,
+  Search,
+  Trash2,
+  Edit2,
+  Calendar,
+  Clock,
+  AlertCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { getCurrentUser, logout } from "@/lib/auth";
 import { createTask, getTasks, updateTask, deleteTask } from "@/lib/tasks";
 import { Task } from "../types";
 import { LoadingSpinner } from "@/components/loading";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -29,7 +49,7 @@ export default function DashboardPage() {
     priority: "medium" as Task["priority"],
     dueDate: "",
   });
-  
+
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +65,6 @@ export default function DashboardPage() {
           setTasks(userTasks);
         } catch (error) {
           toast.error("Failed to fetch tasks");
-         
         } finally {
           setLoading(false);
         }
@@ -88,6 +107,8 @@ export default function DashboardPage() {
   };
 
   const handleSubmitTask = async () => {
+    
+
     try {
       if (editingTask) {
         const updatedTask = await updateTask(editingTask._id, {
@@ -95,7 +116,9 @@ export default function DashboardPage() {
           userId: editingTask.userId,
           createdAt: editingTask.createdAt,
         });
-        setTasks(tasks.map((t) => (t._id === editingTask._id ? updatedTask : t)));
+        setTasks(
+          tasks.map((t) => (t._id === editingTask._id ? updatedTask : t))
+        );
         toast.success("Task updated");
       } else {
         const user = await getCurrentUser();
@@ -104,12 +127,12 @@ export default function DashboardPage() {
           return;
         }
         const newTask = await createTask({
-          ...taskForm, userId: user.userId,
-          _id: ""
+          ...taskForm,
+          userId: user.userId,
+          _id: "",
         });
         setTasks([...tasks, newTask]);
         toast.success("Task created");
-       
       }
       handleCloseDialog();
     } catch (error: any) {
@@ -127,13 +150,14 @@ export default function DashboardPage() {
     }
   };
 
-  const handleUpdateTaskStatus = async (taskId: string, status: Task["status"]) => {
+  const handleUpdateTaskStatus = async (
+    taskId: string,
+    status: Task["status"]
+  ) => {
     try {
-      console.log("status", status);
       const updatedTask = await updateTask(taskId, { status });
-      // setTasks(tasks.map((t) => (t._id === taskId ? updatedTask : t)));
+      setTasks(tasks.map((t) => (t._id === taskId ? updatedTask : t)));
       toast.success("Task updated");
-      
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
     }
@@ -183,16 +207,17 @@ export default function DashboardPage() {
     }
   };
 
-  const filteredTasks = tasks.filter(task => 
-    task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTasks = tasks.filter(
+    (task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const statusColumns = ["todo", "in-progress", "completed"] as const;
   const statusTitles = {
-    "todo": "To Do",
+    todo: "To Do",
     "in-progress": "In Progress",
-    "completed": "Completed"
+    completed: "Completed",
   };
 
   if (loading) {
@@ -205,7 +230,7 @@ export default function DashboardPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-            TaskEase
+              TaskEase
             </h1>
             <div className="flex items-center gap-4 w-full md:w-auto">
               <div className="relative flex-1 md:w-64">
@@ -231,7 +256,9 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h2 className="text-2xl font-semibold">Your Tasks</h2>
-              <p className="text-muted-foreground">Manage and organize your tasks efficiently</p>
+              <p className="text-muted-foreground">
+                Manage and organize your tasks efficiently
+              </p>
             </div>
             <Button onClick={() => handleOpenDialog()} className="gap-2">
               <Plus className="h-4 w-4" />
@@ -242,7 +269,9 @@ export default function DashboardPage() {
           <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>{editingTask ? 'Edit Task' : 'Create New Task'}</DialogTitle>
+                <DialogTitle>
+                  {editingTask ? "Edit Task" : "Create New Task"}
+                </DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
@@ -264,6 +293,7 @@ export default function DashboardPage() {
                     onChange={(e) =>
                       setTaskForm({ ...taskForm, description: e.target.value })
                     }
+                    required
                     placeholder="Enter task description"
                     className="min-h-[100px]"
                   />
@@ -274,7 +304,10 @@ export default function DashboardPage() {
                     <Select
                       value={taskForm.priority}
                       onValueChange={(value) =>
-                        setTaskForm({ ...taskForm, priority: value as Task["priority"] })
+                        setTaskForm({
+                          ...taskForm,
+                          priority: value as Task["priority"],
+                        })
                       }
                     >
                       <SelectTrigger id="priority">
@@ -296,11 +329,18 @@ export default function DashboardPage() {
                       onChange={(e) =>
                         setTaskForm({ ...taskForm, dueDate: e.target.value })
                       }
+                      required
                     />
                   </div>
                 </div>
-                <Button onClick={handleSubmitTask} className="w-full">
-                  {editingTask ? 'Update Task' : 'Create Task'}
+                <Button
+                  onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmitTask();
+                  }}
+                  className="w-full"
+                >
+                  {editingTask ? "Update Task" : "Create Task"}
                 </Button>
               </div>
             </DialogContent>
@@ -310,18 +350,23 @@ export default function DashboardPage() {
             {statusColumns.map((status) => (
               <div key={`column-${status}`} className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium">{statusTitles[status]}</h3>
+                  <h3 className="text-lg font-medium">
+                    {statusTitles[status]}
+                  </h3>
                   <span className="text-sm text-muted-foreground">
-                    {filteredTasks.filter(t => t.status === status).length} tasks
+                    {filteredTasks.filter((t) => t.status === status).length}{" "}
+                    tasks
                   </span>
                 </div>
                 <div className="space-y-4">
                   {filteredTasks
                     .filter((task) => task.status === status)
                     .map((task) => (
-                      <Card 
+                      <Card
                         key={`task-${task._id}`}
-                        className={`hover:shadow-lg transition-all duration-300 ${getStatusColor(task.status)}`}
+                        className={`hover:shadow-lg transition-all duration-300 ${getStatusColor(
+                          task.status
+                        )}`}
                       >
                         <CardHeader className="pb-2">
                           <div className="flex justify-between items-start">
@@ -353,9 +398,15 @@ export default function DashboardPage() {
                             {task.description}
                           </p>
                           <div className="flex flex-wrap items-center gap-3 mb-4">
-                            <div className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full ${getPriorityColor(task.priority)}`}>
+                            <div
+                              className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full ${getPriorityColor(
+                                task.priority
+                              )}`}
+                            >
                               {getPriorityIcon(task.priority)}
-                              <span className="capitalize">{task.priority}</span>
+                              <span className="capitalize">
+                                {task.priority}
+                              </span>
                             </div>
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
@@ -365,7 +416,10 @@ export default function DashboardPage() {
                           <Select
                             value={task.status}
                             onValueChange={(value) =>
-                              handleUpdateTaskStatus(task._id, value as Task["status"])
+                              handleUpdateTaskStatus(
+                                task._id,
+                                value as Task["status"]
+                              )
                             }
                           >
                             <SelectTrigger className="w-full">
@@ -373,8 +427,12 @@ export default function DashboardPage() {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="todo">To Do</SelectItem>
-                              <SelectItem value="in-progress">In Progress</SelectItem>
-                              <SelectItem value="completed">Completed</SelectItem>
+                              <SelectItem value="in-progress">
+                                In Progress
+                              </SelectItem>
+                              <SelectItem value="completed">
+                                Completed
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </CardContent>
