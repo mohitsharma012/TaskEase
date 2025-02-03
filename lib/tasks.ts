@@ -1,3 +1,5 @@
+import { Task } from "@/app/types";
+
 export const createTask = async (task: Omit<Task, 'id' | 'createdAt'>) => {
   const token = localStorage.getItem('token');
   const response = await fetch('/api/tasks', {
