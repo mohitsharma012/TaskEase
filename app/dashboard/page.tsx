@@ -92,14 +92,21 @@ export default function DashboardPage() {
       if (editingTask) {
         const updatedTask = await updateTask(editingTask._id, {
           ...taskForm,
-          id: editingTask._id,
           userId: editingTask.userId,
           createdAt: editingTask.createdAt,
         });
         setTasks(tasks.map((t) => (t._id === editingTask._id ? updatedTask : t)));
         toast.success("Task updated");
       } else {
-        const newTask = await createTask(taskForm);
+        const user = await getCurrentUser();
+        if (!user) {
+          toast.error("User not found");
+          return;
+        }
+        const newTask = await createTask({
+          ...taskForm, userId: user.userId,
+          _id: ""
+        });
         setTasks([...tasks, newTask]);
         toast.success("Task created");
        
