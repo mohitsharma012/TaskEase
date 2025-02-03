@@ -22,6 +22,13 @@ export async function PUT(
     const client = await clientPromise;
     const db = client.db('TaskEase');
     
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const result = await db.collection('tasks').findOneAndUpdate(
       { _id: new ObjectId(params.id), userId: decoded.userId },
       { $set: updates },
@@ -57,9 +64,15 @@ export async function DELETE(
         { status: 401 }
       );
     }
-
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const client = await clientPromise;
     const db = client.db('TaskEase');
     
