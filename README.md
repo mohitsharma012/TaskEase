@@ -96,11 +96,6 @@ taskease/
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
-
-John Smith - [@johnsmith](https://twitter.com/johnsmith) - contact@example.com
-
-Project Link: [https://github.com/yourusername/taskease](https://github.com/yourusername/taskease)
 
 ## Acknowledgments
 
