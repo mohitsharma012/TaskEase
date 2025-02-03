@@ -16,7 +16,7 @@ export async function PUT(
       );
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     const updates = await request.json();
     
     const client = await clientPromise;
