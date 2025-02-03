@@ -8,7 +8,7 @@ const uri = process.env.MONGODB_URI;
 const options = {
   maxPoolSize: 10,
   serverApi: {
-    version: '1',
+    version: "1" as const,
     strict: true,
     deprecationErrors: true,
   },
