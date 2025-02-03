@@ -1,11 +1,11 @@
 export interface User {
-  id: string;
+  _id: string;
   email: string;
   password: string;
 }
 
 export interface Task {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   status: 'todo' | 'in-progress' | 'completed';

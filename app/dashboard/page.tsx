@@ -92,7 +92,7 @@ export default function DashboardPage() {
       if (editingTask) {
         const updatedTask = await updateTask(editingTask._id, {
           ...taskForm,
-          id: editingTask.id,
+          id: editingTask._id,
           userId: editingTask.userId,
           createdAt: editingTask.createdAt,
         });
@@ -313,7 +313,7 @@ export default function DashboardPage() {
                     .filter((task) => task.status === status)
                     .map((task) => (
                       <Card 
-                        key={`task-${task.id}`}
+                        key={`task-${task._id}`}
                         className={`hover:shadow-lg transition-all duration-300 ${getStatusColor(task.status)}`}
                       >
                         <CardHeader className="pb-2">
